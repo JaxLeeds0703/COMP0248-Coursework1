@@ -20,7 +20,7 @@ def build_index():
         print(f"Didn't find testset folder: {DATA_DIR}")
         return
 
-    # 遍历 test 文件夹下的 G01_call, G02_dislike ...
+    # Traverse the folders within the test folder
     for gesture_folder in DATA_DIR.iterdir():
         if not gesture_folder.is_dir():
             continue
@@ -31,7 +31,7 @@ def build_index():
         gesture_name = gesture_folder.name
         class_label = GESTURE_CLASSES[gesture_name]
         
-        # 遍历 clip folder (e.g. clip01, clip02...)
+        # # Traverse the clip folder (clip01 to clip05)
         for clip_folder in gesture_folder.iterdir():
             if not clip_folder.is_dir(): 
                 continue
@@ -39,21 +39,21 @@ def build_index():
             
             rgb_dir = clip_folder / "rgb"
             annotation_dir = clip_folder / "annotation"
-            depth_dir = clip_folder / "depth"  # <--- 新增: Depth 文件夹路径
+            depth_dir = clip_folder / "depth"  
             
             if not rgb_dir.exists(): 
                 print(f"RGB folder not found: '{rgb_dir}'")
                 continue
                 
-            # 遍历每一张 rgb 图片
+            # Traverse each rgb iamges (e.g. frame_xxx.png)
             for rgb_file in sorted(rgb_dir.glob("*.png")):
                 frame_name = rgb_file.name
                 
-                # 检查 Mask
+                # Check Annoations Mask is existed
                 mask_file = annotation_dir / frame_name
                 has_mask = mask_file.exists()
                 
-                # 检查 Depth
+                # Check Depth Map is existed
                 depth_file = depth_dir / frame_name
                 has_depth = depth_file.exists()
                 
@@ -63,16 +63,22 @@ def build_index():
                     "class_label": class_label,
                     "clip": clip_name,
                     "frame_name": frame_name,
+
+                    # .resolve() retrieves the image's absolute path on the computer 
+                    # str() converts it into a string, which is then stored in the CSV table.
                     "rgb_path": str(rgb_file.resolve()),
+
+                    # Record whether it has a mask (True or False)
+                    #If 'has_mask' is True, store the absolute path of the mask; if False, fill in 'None'
                     "has_mask": has_mask, 
                     "mask_path": str(mask_file.resolve()) if has_mask else None,
-                    # 新增 depth 字段，与训练集的 dataset_index_split.csv 保持完全一致
+
                     "has_depth": has_depth,
                     "depth_path": str(depth_file.resolve()) if has_depth else None
                 }
                 data_records.append(record)
                     
-    # 保存为 test_index.csv
+    # Save as .csv file
     df = pd.DataFrame(data_records)
     df.to_csv(OUTPUT_CSV, index=False)
     
