@@ -46,23 +46,12 @@ To training the multi-task network, please run the training script. This script 
 python src/train_exp.py
 ```
 Ablation Study Configurations (Depth & Augmentation)
-To rigorously validate the contribution of multi-modal inputs(Depth Map) and spatial augmentations, the training and evaluation scripts support toggling specific features. This allows users to reproduce our 4 distinct ablation experiments (A, B, C, and D).
+To rigorously validate the contribution of multi-modal inputs(Depth Map) and spatial augmentations, the training and evaluation scripts support toggling specific features. This allows users to reproduce our 4 distinct ablation experiments (A, B, C, and D).Please open `src/train_exp.py` and `src/test_exp.py` ,modify the boolean flags in the configuration section before running:
 
-You can control these via command-line arguments (or configuration variables) when running `train_exp.py` and `test_exp.py`:
-
-- `--depth True/False`: Toggles the 4th input channel. If `True`, the model accepts RGB-D data. If `False`, it accepts 3-channel RGB only.
-- `--aug True/False`: Toggles synchronous spatial augmentations (random rotations, translations) during the training phase.
-
-Example Configurations:
-```bash
-# Experiment A (Baseline): RGB Only, No Augmentation
-python src/train_exp.py --depth False --aug False
-# Experiment B: RGB-D, No Augmentation
-python src/train_exp.py --depth True --aug False
-# Experiment C: RGB Only, With Spatial Augmentation
-python src/train_exp.py --depth False --aug True
-# Experiment D (Proposed): RGB-D + Spatial Augmentation
-python src/train_exp.py --depth True --aug True
+```python
+# Inside src/train_exp.py and src/test_exp.py
+USE_DEPTH = True  # Set to False for Exp A and C
+USE_AUG = True    # Set to False for Exp A and B
 ```
 
 d) Quantitative Evaluation
