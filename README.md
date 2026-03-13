@@ -16,13 +16,14 @@
 │   └── visualise.py                # visualization script
 ├── requirements.txt                # Python dependencies
 └── README.md                       # Project Code User Guide
+```
 
 2.Step-by-Step Usage Guide
 a) Environment Setup
 The python version is 3.10 (3.8+). Install the required dependencies:
 ```text
 pip install -r requirements.txt
-
+```
 b) Data Preparation
 Pleace place your raw dataset into the dataset/ directory: i) RGB_depth_annotations(Contains train and val Dataset)
 ii) test(Contains Test Dataset).Then, use build_dataset_split_index.py and build_test_index.py to generate the structured
@@ -32,13 +33,15 @@ CSV index files required by the DataLoader:
 python scripts/build_dataset_split_index.py
 # 2. Generate test set indexes
 python scripts/build_test_index.py
-
+```
 c) Model Training
 To training the multi-task network, please run the training script. This script will load the CSV index file, initialise the Adam optimiser, and save the optimal weights (based on validation set loss) to the weights/ directory.Hyperparameters such as batch size, learning rate, and epochs can be modified inside the train_exp.py.
 ```text
 python src/train_exp.py
-
+```
 d) Quantitative Evaluation
 This script loads the .pth weights file and outputs the final Accuracy, MAE, and Dice scores
 ```text
 python src/test_exp.py
+```
+
