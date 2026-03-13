@@ -45,11 +45,39 @@ To training the multi-task network, please run the training script. This script 
 ```text
 python src/train_exp.py
 ```
+Ablation Study Configurations (Depth & Augmentation)
+To rigorously validate the contribution of multi-modal inputs(Depth Map) and spatial augmentations, the training and evaluation scripts support toggling specific features. This allows users to reproduce our 4 distinct ablation experiments (A, B, C, and D).
+
+You can control these via command-line arguments (or configuration variables) when running `train_exp.py` and `test_exp.py`:
+
+- `--depth True/False`: Toggles the 4th input channel. If `True`, the model accepts RGB-D data. If `False`, it accepts 3-channel RGB only.
+- `--aug True/False`: Toggles synchronous spatial augmentations (random rotations, translations) during the training phase.
+
+Example Configurations:
+```bash
+# Experiment A (Baseline): RGB Only, No Augmentation
+python src/train_exp.py --depth False --aug False
+# Experiment B: RGB-D, No Augmentation
+python src/train_exp.py --depth True --aug False
+# Experiment C: RGB Only, With Spatial Augmentation
+python src/train_exp.py --depth False --aug True
+# Experiment D (Proposed): RGB-D + Spatial Augmentation
+python src/train_exp.py --depth True --aug True
+```
 
 d) Quantitative Evaluation
 
-This script loads the .pth weights file and outputs the final Accuracy, MAE, and Dice scores
+This script loads the .pth weights file and outputs the Classification, Detection and Boundingboc metrics.
 ```text
 python src/test_exp.py
 ```
+e) Qualitative Visualization
 
+Visualize predictions on the Test Set (5 random samples):
+```text
+python scripts/visualise.py --split test --n 5
+```
+Visualize predictions on the Validation Set:
+```text
+python scripts/visualise.py --split val --n 5
+```
